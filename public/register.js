@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("submitButton").addEventListener("click", async function (event) {
-    // Prevenir el comportamiento predeterminado del formulario
     event.preventDefault();
 
     const nombre = document.getElementById("firstName").value;
@@ -40,4 +39,12 @@ document.addEventListener("DOMContentLoaded", function () {
     // Realiza la redirección al home
     window.location.href = responseData.redirectUrl;
   });
+  
+  //sirve para que el usuario no pueda volver a acceder a esta pagina una vez ya tiene sesion iniciada
+  const token = localStorage.getItem('token');
+  console.log(token)
+
+  if (token) {
+      window.location.href = "http://localhost:3000/";
+  }
 });

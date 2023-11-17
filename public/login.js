@@ -30,4 +30,12 @@ document.addEventListener("DOMContentLoaded", function () {
             errorMessageElement.style.display = "block";
         }
     });
+
+    //sirve para que el usuario no pueda volver a acceder a esta pagina una vez ya tiene sesion iniciada
+    const token = localStorage.getItem('token');
+    console.log(token)
+
+    if (token) {
+        window.location.href = "http://localhost:3000/";
+    }
 });
