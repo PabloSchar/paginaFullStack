@@ -10,6 +10,8 @@ const userSchema = new mongoose.Schema({
     provincia: String,
     ciudad: String,
     direccion: String,
+    password: String,
+    salt: String,
 });
 
 const UserModel = mongoose.model('User', userSchema);

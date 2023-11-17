@@ -42,3 +42,7 @@ h1 {
     text-align: center;
     color: #6c757d;
 }
+
+#error-message {
+    margin-top: 10px;
+}
