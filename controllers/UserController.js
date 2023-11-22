@@ -1,5 +1,10 @@
 const User = require('../models/userModel')
 const userUtils= require('../utils/userUtils')
+const path = require('path');
+
+const registerget = async (req,res)=>{
+    res.sendFile(path.join(__dirname, '../user/html', 'register.html'));
+}
 
 const register = async (req,res)=>{
     try{
@@ -22,6 +27,10 @@ const register = async (req,res)=>{
     }catch(error){
         res.status(500).send(error)
     }
+}
+
+const loginget = async (req,res)=>{
+    res.sendFile(path.join(__dirname, '../user/html', 'login.html'));
 }
 
 const login = async (req, res) => {
@@ -71,6 +80,8 @@ const login = async (req, res) => {
 
 module.exports = {
     register:register,
-    login: login
+    registerget:registerget,
+    login:login,
+    loginget:loginget
     //private:private
 }

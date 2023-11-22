@@ -1,41 +1,14 @@
 const express = require('express')
 const route = express.Router()
 const UserControllers = require('../controllers/UserController')
-const path = require('path');
 
-route.use(express.static('public', { 
-    setHeaders: (res, path, stat) => {
-      if (path.endsWith('.js')) {
-        res.set('Content-Type', 'application/javascript');
-      }
-    }
-}));
-
+// Rutas para el registro de usuarios
+route.get('/register', UserControllers.registerget)
 route.post('/register', UserControllers.register)
 
-route.get('/register', (req, res) => {
-    const filePath = path.join(__dirname, '..', 'public', 'register.html');
-    
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error interno del servidor');
-        }
-    });
-});
-
+// Rutas para el inicio de sesión de usuarios
+route.get('/login', UserControllers.loginget)
 route.post('/login', UserControllers.login)
-
-route.get('/login', (req, res) => {
-    const filePath = path.join(__dirname, '..', 'public', 'login.html');
-    
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error(err);
-            res.status(500).send('Error interno del servidor');
-        }
-    });
-});
 
 //route.get('/private', UserControllers.private)
 

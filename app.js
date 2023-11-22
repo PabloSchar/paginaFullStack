@@ -5,26 +5,20 @@ const mongoose = require('mongoose')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 const userRoutes = require('./routes/userRoutes')
+const productRoutes = require('./routes/productRoutes')
 const path = require('path');
-
-app.use(express.static('public', { 
-    setHeaders: (res, path, stat) => {
-      if (path.endsWith('.js')) {
-        res.set('Content-Type', 'application/javascript');
-      }
-    }
-}));
 
 //middlewares
 app.use(bodyParser.json())
 app.use(cors())
 
-app.use('/user',userRoutes)
+app.use(express.static(path.join(__dirname, "fe")));
 
-app.get('/', (req, res) => {
-    const indexPath = path.join(__dirname, 'public', 'index.html');
-    res.sendFile(indexPath);
-});
+// Rutas de usuario
+app.use('/user', userRoutes);
+
+// Rutas de productos (o cualquier otra cosa)
+app.use('/', productRoutes);
 
 app.listen(port, async () => {
     try{
