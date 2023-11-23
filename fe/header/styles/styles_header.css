@@ -1,0 +1,23 @@
+body {
+    margin: 0;
+}
+
+.main-header {
+    background-color: black;
+    color: white;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo img {
+    max-width: 80px;
+    height: auto;
+    margin-left: 10px;
+}
+
+.icons img {
+    width: 25px;
+    margin-left: 15px;
+}

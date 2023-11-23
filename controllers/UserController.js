@@ -1,6 +1,7 @@
 const User = require('../models/userModel')
 const userUtils= require('../utils/userUtils')
 const path = require('path');
+const jwt = require('jsonwebtoken');
 
 const registerget = async (req,res)=>{
     res.sendFile(path.join(__dirname, '../user/html', 'register.html'));
@@ -65,6 +66,39 @@ const login = async (req, res) => {
     }
 }
 
+const perfilget = async (req,res)=>{
+    res.sendFile(path.join(__dirname, '../user/html', 'perfil.html'));
+}
+
+const perfilpageget = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        // Decodifica el token para obtener el correo
+        const decodedToken = jwt.verify(token, 'token-secreto');
+        const userEmail = decodedToken;
+
+        const usuarioEncontrado = await User.findOne({ correo: userEmail });
+
+        if (!usuarioEncontrado) {
+            return res.status(404).json({ mensaje: 'Usuario no encontrado' });
+        }
+        
+        res.json({
+            nombre: usuarioEncontrado.nombre,
+            apellido: usuarioEncontrado.apellido,
+            nombreusuario: usuarioEncontrado.nombreusuario,
+            correo: usuarioEncontrado.correo,
+            numeroTelefono: usuarioEncontrado.numeroTelefono,
+            codigoPostal: usuarioEncontrado.codigoPostal,
+            provincia: usuarioEncontrado.provincia,
+            ciudad: usuarioEncontrado.ciudad,
+            direccion: usuarioEncontrado.direccion
+        });
+    } catch (error) {
+        console.error('Error al obtener datos del perfil:', error);
+        res.status(500).json({ mensaje: 'Error interno del servidor' });
+    }
+};
 /*const private = async (req,res)=>{
     const authHeader = req.headers['authorization'] // "Bearer 123213jdskfjgkdsjg"
     const token = authHeader && authHeader.split(' ')[1]// ["Bearer","asdasdsafsdfsdf"]
@@ -82,6 +116,8 @@ module.exports = {
     register:register,
     registerget:registerget,
     login:login,
-    loginget:loginget
+    loginget:loginget,
+    perfilget:perfilget,
+    perfilpageget:perfilpageget
     //private:private
 }

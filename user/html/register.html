@@ -1,4 +1,3 @@
-<!-- public/sign_in.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,12 +8,11 @@
     <link rel="stylesheet" href="/user/css/styles_register.css">
 </head>
 <body>
+    <div id="header-container"></div>
     <div class="container">
         <h1>Crear Cuenta</h1>
         
         <form id="loginForm" action="http://localhost:3000/user/register" method="POST">
-           <!-- ... (código anterior) ... -->
-
             <div class="row">
                 <div class="col-md-6 mb-3">
                     <label for="firstName" class="form-label">Nombre</label>
@@ -66,7 +64,6 @@
                 <label for="address" class="form-label">Dirección</label>
                 <input type="text" class="form-control" id="address" name="address" required>
             </div>
-            <!-- Fin de nuevos campos -->
 
             <button type="submit" class="btn btn-primary" id="submitButton">Crear Cuenta</button>
         </form>
@@ -76,7 +73,6 @@
         </div>
     </div>
 
-    <!-- Scripts de Bootstrap y JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
     <script src="/user/js/register.js"></script>

@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, "fe")));
 // Rutas de usuario
 app.use('/user', userRoutes);
 
-// Rutas de productos (o cualquier otra cosa)
+// Rutas de productos
 app.use('/', productRoutes);
 
 app.listen(port, async () => {

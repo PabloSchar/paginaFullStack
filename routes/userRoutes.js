@@ -10,6 +10,9 @@ route.post('/register', UserControllers.register)
 route.get('/login', UserControllers.loginget)
 route.post('/login', UserControllers.login)
 
+route.get('/perfil', UserControllers.perfilget)
+route.get('/perfil-page', UserControllers.perfilpageget)
+
 //route.get('/private', UserControllers.private)
 
 

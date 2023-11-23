@@ -1,7 +1,7 @@
 const Product = require('../models/productsModel')
 const path = require('path');
 
-const products = async (req,res)=>{
+const products = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const perPage = 6;
 
@@ -14,7 +14,7 @@ const products = async (req,res)=>{
     } catch (error) {
         res.status(500).json({ error: 'Error al recuperar productos' });
     }
-}
+};
 
 const productsaddnewget = async (req,res)=>{
     res.sendFile(path.join(__dirname, '../products/html', 'productsaddnew.html'));
@@ -36,9 +36,19 @@ const productsaddnewpost = async (req,res)=>{
     }
 }
 
+const productsCount = async (req, res) => {
+    try {
+        const count = await Product.countDocuments();
+        res.send({ count });
+    } catch (error) {
+        res.status(500).json({ error: 'Error al contar los productos' });
+    }
+};
+
 module.exports = {
     products:products,
     productsaddnewget:productsaddnewget,
-    productsaddnewpost:productsaddnewpost
+    productsaddnewpost:productsaddnewpost,
+    productsCount:productsCount
     //private:private
 }
