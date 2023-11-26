@@ -16,9 +16,14 @@ const products = async (req, res) => {
     }
 };
 
-const productsaddnewget = async (req,res)=>{
-    res.sendFile(path.join(__dirname, '../products/html', 'productsaddnew.html'));
-}
+const allproducts = async (req, res) => {
+    try {
+        const allProducts = await Product.find();
+        res.json(allProducts);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al recuperar todos los productos' });
+    }
+};
 
 const productsaddnewpost = async (req,res)=>{
     try {
@@ -45,10 +50,38 @@ const productsCount = async (req, res) => {
     }
 };
 
+const productsaddnewget = async (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/products', 'productsaddnew.html'));
+};
+
+const productsdeleteget = async (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/products', 'deleteproduct.html'));
+};
+
+const productsdelete = async (req, res) => {
+    const productId = req.params.productId;
+
+    try {
+        // Encuentra el producto por ID y lo elimina
+        const deletedProduct = await Product.findByIdAndDelete(productId);
+
+        if (deletedProduct) {
+        res.json({ message: 'Producto eliminado exitosamente' });
+        } else {
+        res.status(404).json({ error: 'Producto no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al eliminar el producto:', error);
+        res.status(500).json({ error: 'Error interno al eliminar el producto' });
+    }
+};
+
 module.exports = {
     products:products,
-    productsaddnewget:productsaddnewget,
+    allproducts:allproducts,
     productsaddnewpost:productsaddnewpost,
-    productsCount:productsCount
-    //private:private
+    productsCount:productsCount,
+    productsaddnewget:productsaddnewget,
+    productsdeleteget:productsdeleteget,
+    productsdelete:productsdelete
 }

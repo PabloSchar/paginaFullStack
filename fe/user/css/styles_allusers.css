@@ -1,0 +1,27 @@
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+.user-list-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.user-item {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.user-info {
+    margin-bottom: 10px;
+}
+
+.role-select {
+    margin-left: 10px;
+}
+
+.action-btn {
+    margin-right: 5px;
+}

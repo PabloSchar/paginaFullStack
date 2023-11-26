@@ -1,3 +1,47 @@
+function createAdminMenu() {
+    const adminMenuContainer = document.createElement('div');
+    adminMenuContainer.classList.add('card');
+
+    const adminMenuBody = document.createElement('div');
+    adminMenuBody.classList.add('card-body');
+
+    const adminMenuTitle = document.createElement('h2');
+    adminMenuTitle.classList.add('card-title', 'text-center', 'mb-4');
+    adminMenuTitle.textContent = 'Menu de Admin';
+
+    const agregarProductoBtn = document.createElement('button');
+    agregarProductoBtn.id = 'agregarProductoBtn'; // Asigna el ID
+    agregarProductoBtn.classList.add('btn', 'btn-success');
+    agregarProductoBtn.textContent = 'Agregar Producto';
+    agregarProductoBtn.addEventListener('click', function () {
+        window.location.href = "/products/addnew";
+    });
+
+    const borrarProductoBtn = document.createElement('button');
+    borrarProductoBtn.id = 'borrarProductoBtn'; // Asigna el ID
+    borrarProductoBtn.classList.add('btn', 'btn-danger');
+    borrarProductoBtn.textContent = 'Borrar Producto';
+    borrarProductoBtn.addEventListener('click', function () {
+        window.location.href = "/products/deleteproduct";
+    });
+
+    const verUsersBtn = document.createElement('button');
+    verUsersBtn.id = 'verUsersBtn'; // Asigna el ID
+    verUsersBtn.classList.add('btn', 'btn-info');
+    verUsersBtn.textContent = 'Ver Usuarios';
+    verUsersBtn.addEventListener('click', function () {
+        window.location.href = "/user/allusers";
+    });
+
+    adminMenuBody.appendChild(adminMenuTitle);
+    adminMenuBody.appendChild(agregarProductoBtn);
+    adminMenuBody.appendChild(borrarProductoBtn);
+    adminMenuBody.appendChild(verUsersBtn);
+
+    adminMenuContainer.appendChild(adminMenuBody);
+    return adminMenuContainer;
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     const headerContainer = document.getElementById('header-container');
 
@@ -23,6 +67,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         .catch(error => console.error('Error al cargar el encabezado:', error));
 
     const token = localStorage.getItem('token');
+
 
     fetch('/user/perfil-page', {
         method: 'GET',
@@ -54,12 +99,25 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.location.href = '/user/login';
     });
 
-    const agregarProductoBtn = document.getElementById('agregarProductoBtn');
+    const isAdminContainer = document.getElementById('admin-menu-container');
 
-    agregarProductoBtn.addEventListener("click", function () {
-        // Redirige a la página para agregar nuevos productos
-        window.location.href = "/products/addnew";
-    });
+
+    try {
+        const response = await fetch('http://localhost:3000/user/isadmin', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token,
+            },
+        });
+
+        if (response.ok) {
+            const adminMenu = createAdminMenu();
+            isAdminContainer.appendChild(adminMenu);
+        }
+    } catch (error) {
+        console.error('Error al verificar si el usuario es administrador:', error);
+    }
 
     //sirve para que el usuario deba iniciar sesion para entrar a este apartado
 

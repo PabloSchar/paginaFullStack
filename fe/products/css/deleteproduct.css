@@ -1,0 +1,35 @@
+.container {
+    max-width: 600px;
+}
+
+#productSelect {
+    margin-top: 10%;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    justify-content: center;
+    border: 2px solid #555555;
+}
+
+h1 {
+    color: #dc3545;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.btn-danger {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.btn-danger:hover {
+    background-color: #c82333;
+    border-color: #bd2130;
+}
+
+#productSelector {
+    border: 2px solid #777;
+}

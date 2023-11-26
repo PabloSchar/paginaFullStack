@@ -3,6 +3,7 @@ const routes = express.Router()
 const productsControllers = require('../controllers/productsController')
 
 routes.get('/products', productsControllers.products)
+routes.get('/allproducts', productsControllers.allproducts)
 
 routes.get('/products/count', productsControllers.productsCount);
 
@@ -10,7 +11,8 @@ routes.get('/products/addnew', productsControllers.productsaddnewget)
 
 routes.post('/products/addnew', productsControllers.productsaddnewpost)
 
-//route.get('/private', UserControllers.private)
+routes.get('/products/deleteproduct', productsControllers.productsdeleteget)
 
+routes.delete('/products/deleteproduct/:productId', productsControllers.productsdelete)
 
 module.exports = routes

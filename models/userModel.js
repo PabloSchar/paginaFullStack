@@ -12,6 +12,11 @@ const userSchema = new mongoose.Schema({
     direccion: String,
     password: String,
     salt: String,
+    role: {
+        type: String,
+        enum: ['cliente', 'admin'],
+        default: 'cliente',
+    },
 });
 
 const UserModel = mongoose.model('User', userSchema);

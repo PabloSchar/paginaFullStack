@@ -9,7 +9,6 @@ body {
     background-size: 100% 100%;
     background-position: center;
     background-repeat: no-repeat;
-    overflow: hidden;
     height: 100vh;
 }
 
@@ -45,4 +44,10 @@ h1 {
 
 #error-message {
     margin-top: 10px;
+}
+
+.small-alert {
+    max-width: 320px;
+    margin-left: auto;
+    transition: opacity 0.5s ease-in-out;
 }

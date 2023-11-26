@@ -1,3 +1,18 @@
+function showErrorAlert(message) {
+    const errorContainer = document.getElementById('error-container');
+    
+    const alertDiv = document.createElement('div');
+    alertDiv.classList.add('alert', 'alert-danger', 'mt-3', 'fade', 'show', 'small-alert');
+    alertDiv.textContent = message;
+  
+    errorContainer.innerHTML = '';
+    errorContainer.appendChild(alertDiv);
+  
+    setTimeout(() => {
+      alertDiv.classList.remove('show');
+    }, 3000);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
     const headerContainer = document.getElementById('header-container');
 
@@ -49,9 +64,8 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
             const errorData = await data.json();
 
-            errorMessageElement.innerText = errorData.error;
+            showErrorAlert(errorData.error);
 
-            errorMessageElement.style.display = "block";
         }
     });
 

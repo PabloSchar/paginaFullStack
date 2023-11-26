@@ -6,6 +6,7 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const userRoutes = require('./routes/userRoutes')
 const productRoutes = require('./routes/productRoutes')
+const carritoRoutes = require('./routes/carritoRoutes')
 const path = require('path');
 
 //middlewares
@@ -19,6 +20,9 @@ app.use('/user', userRoutes);
 
 // Rutas de productos
 app.use('/', productRoutes);
+
+// Rutas de carrito
+app.use('/', carritoRoutes);
 
 app.listen(port, async () => {
     try{

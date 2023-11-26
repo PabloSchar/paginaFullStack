@@ -1,3 +1,18 @@
+function showErrorAlert(message) {
+  const errorContainer = document.getElementById('error-container');
+  
+  const alertDiv = document.createElement('div');
+  alertDiv.classList.add('alert', 'alert-danger', 'mt-3', 'fade', 'show', 'small-alert');
+  alertDiv.textContent = message;
+
+  errorContainer.innerHTML = '';
+  errorContainer.appendChild(alertDiv);
+
+  setTimeout(() => {
+    alertDiv.classList.remove('show');
+  }, 3000);
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   const headerContainer = document.getElementById('header-container');
 
@@ -37,37 +52,45 @@ document.addEventListener("DOMContentLoaded", function () {
     const direccion = document.getElementById("address").value;
     const password = document.getElementById("password").value;
 
-    const data = await fetch("http://localhost:3000/user/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        nombre: nombre,
-        apellido: apellido,
-        nombreusuario: nombreusuario,
-        correo: correo,
-        numeroTelefono: numeroTelefono,
-        codigoPostal: codigoPostal,
-        provincia: provincia,
-        ciudad: ciudad,
-        direccion: direccion,
-        password: password
-      }),
-    });
+    try {
+      const data = await fetch("http://localhost:3000/user/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          nombre: nombre,
+          apellido: apellido,
+          nombreusuario: nombreusuario,
+          correo: correo,
+          numeroTelefono: numeroTelefono,
+          codigoPostal: codigoPostal,
+          provincia: provincia,
+          ciudad: ciudad,
+          direccion: direccion,
+          password: password
+        }),
+      });
 
-    const responseData = await data.json();
+      const responseData = await data.json();
 
-    localStorage.setItem('token', responseData.token);
+      if (data.ok) {
+        localStorage.setItem('token', responseData.token);
+        window.location.href = responseData.redirectUrl;
+      } else {
+        showErrorAlert(responseData.message);
+      }
+    } catch (error) {
+      showErrorAlert('Error al intentar registrar. Por favor, inténtalo de nuevo.');
+      console.error('Error al intentar registrar:', error);
+    }
 
-    // Realiza la redirección al home
-    window.location.href = responseData.redirectUrl;
   });
   
   //sirve para que el usuario no pueda volver a acceder a esta pagina una vez ya tiene sesion iniciada
   const token = localStorage.getItem('token');
 
   if (token) {
-      window.location.href = "http://localhost:3000/";
+    window.location.href = "http://localhost:3000/";
   }
 });
