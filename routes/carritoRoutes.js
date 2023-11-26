@@ -7,4 +7,6 @@ routes.get('/carrito/api', carritoController.api);
 
 routes.post('/carrito/add', carritoController.add);
 
+routes.put('/carrito/api/:idProducto', carritoController.actualizarcantidad);
+
 module.exports = routes

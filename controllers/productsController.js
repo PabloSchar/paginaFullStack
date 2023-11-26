@@ -76,6 +76,25 @@ const productsdelete = async (req, res) => {
     }
 };
 
+const getProductStock = async (req, res) => {
+    try {
+        const productId = req.params.id;
+
+        // Busca el producto en la base de datos
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        // Devolvuelve el stock del producto
+        res.json({ productStock: product.productStock });
+    } catch (error) {
+        console.error('Error al obtener el stock del producto:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     products:products,
     allproducts:allproducts,
@@ -83,5 +102,6 @@ module.exports = {
     productsCount:productsCount,
     productsaddnewget:productsaddnewget,
     productsdeleteget:productsdeleteget,
-    productsdelete:productsdelete
+    productsdelete:productsdelete,
+    getProductStock:getProductStock
 }

@@ -15,4 +15,6 @@ routes.get('/products/deleteproduct', productsControllers.productsdeleteget)
 
 routes.delete('/products/deleteproduct/:productId', productsControllers.productsdelete)
 
+routes.get('/products/:id', productsControllers.getProductStock);
+
 module.exports = routes

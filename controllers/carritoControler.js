@@ -1,4 +1,5 @@
 const Carrito = require('../models/carritoModel')
+const Producto = require('../models/productsModel');
 const userUtils = require('../utils/userUtils')
 const path = require('path');
 
@@ -70,8 +71,58 @@ const add = async (req, res) => {
     }
 };
 
+const actualizarcantidad = async (req, res) => {
+    try {
+        const idProducto = req.params.idProducto;
+        const nuevaCantidad = req.body.cantidad;
+
+        // Buscar el producto en el carrito
+        const carrito = await Carrito.findOne({ 'productos.productoId': idProducto });
+
+        if (!carrito) {
+            return res.status(404).json({ message: 'Producto no encontrado en el carrito' });
+        }
+
+        // Busca el índice del producto en el carrito
+        const index = carrito.productos.findIndex(item => item.productoId.equals(idProducto));
+
+        // Obtiene el producto actual en el carrito
+        const productoActual = carrito.productos[index];
+
+        const productoBD = await Producto.findById(idProducto);
+
+        if (!productoBD) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        // Verifica si la nueva cantidad es válida (no excede el stock disponible)
+        if (nuevaCantidad > productoBD.productStock) {
+            return res.status(400).json({ message: 'Cantidad excede el stock disponible' });
+        }
+
+        const cantidadAnterior = productoActual.cantidad;
+
+        productoActual.cantidad = nuevaCantidad;
+
+        carrito.total += (nuevaCantidad - cantidadAnterior) * productoBD.productPrice;
+
+        // Si la nueva cantidad es 0, elimina el producto del carrito
+        if (nuevaCantidad === 0) {
+            carrito.productos.splice(index, 1);
+        }
+
+        await carrito.save();
+
+        res.json({ message: 'Cantidad actualizada correctamente' });
+    } catch (error) {
+        console.error('Error al actualizar la cantidad del producto en el carrito:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     getCart:getCart,
     api:api,
-    add:add
+    add:add,
+    actualizarcantidad:actualizarcantidad
 }
