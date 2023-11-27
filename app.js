@@ -7,6 +7,7 @@ const cors = require('cors')
 const userRoutes = require('./routes/userRoutes')
 const productRoutes = require('./routes/productRoutes')
 const carritoRoutes = require('./routes/carritoRoutes')
+const ordenRoutes = require('./routes/ordenRoutes')
 const path = require('path');
 
 //middlewares
@@ -23,6 +24,9 @@ app.use('/', productRoutes);
 
 // Rutas de carrito
 app.use('/', carritoRoutes);
+
+// Rutas de ordenes
+app.use('/', ordenRoutes);
 
 app.listen(port, async () => {
     try{

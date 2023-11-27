@@ -122,12 +122,44 @@ document.addEventListener('DOMContentLoaded', async function () {
             carritoContainer.appendChild(row);
         }
 
-        totalAmountElement.textContent = carritoData.total.toFixed(2);
+        if (carritoData.productos.length === 0) {
+            // No hay productos en el carrito, deshabilita el botón de compra
+            checkoutBtn.disabled = true;
+        } else {
+            checkoutBtn.disabled = false;
+            totalAmountElement.textContent = carritoData.total.toFixed(2);
 
-        checkoutBtn.addEventListener('click', async () => {
-            // Falta agregar la logica para realizar el pedido
-            console.log('Realizar pago');
-        });
+            checkoutBtn.addEventListener('click', async () => {
+                const confirmacion = confirm('¿Desea realizar el pedido?');
+
+                if (confirmacion) {
+                    realizarPedido();
+                }
+            });
+        }
+        
+
+        async function realizarPedido() {
+            try {
+                const response = await fetch('http://localhost:3000/pedidos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': token,
+                    },
+                    body: JSON.stringify({ productos: carritoData.productos, total: carritoData.total }),
+                });
+    
+                if (response.ok) {
+                    console.log('Pedido realizado con éxito');
+                    location.reload();
+                } else {
+                    console.error('Error al realizar el pedido:', response.statusText);
+                }
+            } catch (error) {
+                console.error('Error al realizar el pedido:', error);
+            }
+        }
     } catch (error) {
         console.error('Error al obtener la información del carrito:', error);
     }
