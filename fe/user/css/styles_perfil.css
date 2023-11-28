@@ -33,6 +33,11 @@ body {
     width: 100%;
 }
 
+#editarProductoBtn {
+    margin-top: 5%;
+    width: 100%;
+}
+
 #borrarProductoBtn {
     margin-top: 5%;
     width: 100%;

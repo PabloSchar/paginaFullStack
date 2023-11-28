@@ -6,7 +6,7 @@ const products = async (req, res) => {
     const perPage = 6;
 
     try {
-        const products = await Product.find()
+        const products = await Product.find({ productStock: { $gt: 0 } })
             .skip((page - 1) * perPage)
             .limit(perPage);
 
@@ -95,6 +95,42 @@ const getProductStock = async (req, res) => {
     }
 };
 
+const productseditget = async (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/products', 'editproduct.html'));
+};
+
+const productseditput = async (req, res) => {
+    const productId = req.params.id;
+
+    try {
+        // Encuentra el producto por su ID
+        const producto = await Product.findById(productId);
+
+        if (!producto) {
+            return res.status(404).json({ message: 'Producto no encontrado' });
+        }
+
+        // Validar que el stock y el precio no sean menores a 0
+        if (req.body.productStock < 0 || req.body.productPrice < 0) {
+            return res.status(400).json({ message: 'El stock y el precio deben ser mayores o iguales a 0' });
+        }
+
+        // Actualiza los campos con los nuevos valores
+        producto.productName = req.body.productName || producto.productName;
+        producto.productStock = req.body.productStock || producto.productStock;
+        producto.productPrice = req.body.productPrice || producto.productPrice;
+        producto.productImage = req.body.productImage || producto.productImage;
+        producto.productDescription = req.body.productDescription || producto.productDescription;
+
+        const productoActualizado = await producto.save();
+
+        res.json({ message: 'Producto actualizado con éxito', producto: productoActualizado });
+    } catch (error) {
+        console.error('Error al actualizar el producto:', error);
+        res.status(500).json({ message: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     products:products,
     allproducts:allproducts,
@@ -103,5 +139,7 @@ module.exports = {
     productsaddnewget:productsaddnewget,
     productsdeleteget:productsdeleteget,
     productsdelete:productsdelete,
-    getProductStock:getProductStock
+    getProductStock:getProductStock,
+    productseditget:productseditget,
+    productseditput:productseditput
 }

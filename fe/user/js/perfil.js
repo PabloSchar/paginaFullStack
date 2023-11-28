@@ -11,10 +11,18 @@ function createAdminMenu() {
 
     const agregarProductoBtn = document.createElement('button');
     agregarProductoBtn.id = 'agregarProductoBtn'; // Asigna el ID
-    agregarProductoBtn.classList.add('btn', 'btn-success');
+    agregarProductoBtn.classList.add('btn', 'btn-primary');
     agregarProductoBtn.textContent = 'Agregar Producto';
     agregarProductoBtn.addEventListener('click', function () {
         window.location.href = "/products/addnew";
+    });
+
+    const editarProductoBtn = document.createElement('button');
+    editarProductoBtn.id = 'editarProductoBtn'; // Asigna el ID
+    editarProductoBtn.classList.add('btn', 'btn-secondary');
+    editarProductoBtn.textContent = 'Editar Producto';
+    editarProductoBtn.addEventListener('click', function () {
+        window.location.href = "/products/edit";
     });
 
     const borrarProductoBtn = document.createElement('button');
@@ -35,6 +43,7 @@ function createAdminMenu() {
 
     adminMenuBody.appendChild(adminMenuTitle);
     adminMenuBody.appendChild(agregarProductoBtn);
+    adminMenuBody.appendChild(editarProductoBtn);
     adminMenuBody.appendChild(borrarProductoBtn);
     adminMenuBody.appendChild(verUsersBtn);
 
