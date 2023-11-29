@@ -131,6 +131,27 @@ const productseditput = async (req, res) => {
     }
 };
 
+const getdetalles = async (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/products', 'detallesproducts.html'));
+};
+
+const senddetails = async (req, res) => {
+    try {
+        const productId = req.params.productId;
+    
+        const product = await Product.findById(productId);
+    
+        if (!product) {
+          return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+    
+        res.json(product);
+    } catch (error) {
+    console.error('Error al obtener detalles del producto:', error);
+    res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
 module.exports = {
     products:products,
     allproducts:allproducts,
@@ -141,5 +162,7 @@ module.exports = {
     productsdelete:productsdelete,
     getProductStock:getProductStock,
     productseditget:productseditget,
-    productseditput:productseditput
+    productseditput:productseditput,
+    getdetalles:getdetalles,
+    senddetails:senddetails
 }

@@ -21,4 +21,8 @@ routes.delete('/products/deleteproduct/:productId', productsControllers.products
 
 routes.get('/products/:id', productsControllers.getProductStock);
 
+routes.get('/products/detalles/:id', productsControllers.getdetalles);
+
+routes.get('/products/api/details/:productId', productsControllers.senddetails);
+
 module.exports = routes

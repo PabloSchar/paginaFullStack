@@ -67,12 +67,10 @@ function displayProducts(productList) {
             productName.classList.add('card-title', 'text-center', 'mb-3');
             productName.style.height = '50px';
 
-            const productImage = document.createElement('img');
-            productImage.src = productList[j].productImage;
-            productImage.classList.add('card-img-top', 'mb-3', 'img-fluid');
-            productImage.style.maxWidth = '90%';
-            productImage.style.height = 'auto';
-            productImage.style.objectFit = 'contain';
+            const imageLink = document.createElement('a');
+            imageLink.href = `/products/detalles/${productList[j]._id}`;
+            imageLink.style.textDecoration = 'none';
+            imageLink.appendChild(createProductImage(productList[j].productImage));
 
             const productPrice = document.createElement('h1');
             productPrice.textContent = "$" + productList[j].productPrice;
@@ -92,7 +90,7 @@ function displayProducts(productList) {
             });
 
             cardBody.appendChild(productName);
-            cardBody.appendChild(productImage);
+            cardBody.appendChild(imageLink);
             cardBody.appendChild(productPrice);
             cardBody.appendChild(addToCartButton);
 
@@ -104,6 +102,16 @@ function displayProducts(productList) {
 
         productsContainer.appendChild(currentRow);
     }
+}
+
+function createProductImage(src) {
+    const productImage = document.createElement('img');
+    productImage.src = src;
+    productImage.classList.add('card-img-top', 'mb-3', 'img-fluid');
+    productImage.style.maxWidth = '90%';
+    productImage.style.height = 'auto';
+    productImage.style.objectFit = 'contain';
+    return productImage;
 }
 
 function displayPagination(totalPages, currentPage) {
