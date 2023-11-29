@@ -36,6 +36,15 @@ document.addEventListener('DOMContentLoaded', async function () {
             })
             .catch(error => console.error('Error al cargar el encabezado:', error));
 
+        const footerContainer = document.getElementById('footer-container');
+
+        fetch('/footer/html/footer.html')
+            .then(response => response.text())
+            .then(html => {
+                footerContainer.innerHTML = html;
+            })
+            .catch(error => console.error('Error al cargar el encabezado:', error));
+
         const carritoData = await carritoResponse.json();
 
         // Agregar dinámicamente el título
@@ -142,7 +151,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         totalTitulo.appendChild(totalSpan);
         totalContainer.appendChild(totalTitulo);
-        document.body.appendChild(totalContainer);
+        carritoContainer.appendChild(totalContainer);
 
         // Agregar dinámicamente el botón de realizar pedido
         const realizarPedidoBtn = document.createElement('button');
@@ -158,7 +167,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         centeringContainer.appendChild(realizarPedidoBtn);
 
-        document.body.appendChild(centeringContainer);
+        carritoContainer.appendChild(centeringContainer);
 
         const checkoutBtn = document.getElementById('checkout-btn');
         const totalAmountElement = document.getElementById('total-amount');
@@ -213,8 +222,6 @@ document.addEventListener('DOMContentLoaded', async function () {
             const stockResponse = await fetch(`http://localhost:3000/products/${producto.productoId._id}`);
             const stockData = await stockResponse.json();
             const stockDisponible = stockData.productStock;
-
-            console.log(stockDisponible);
 
             const newQuantity = action === 'increment' ? producto.cantidad + 1 : producto.cantidad - 1;
 

@@ -38,6 +38,15 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(error => console.error('Error al cargar el encabezado:', error));
 
+  const footerContainer = document.getElementById('footer-container');
+
+  fetch('/footer/html/footer.html')
+      .then(response => response.text())
+      .then(html => {
+          footerContainer.innerHTML = html;
+      })
+      .catch(error => console.error('Error al cargar el encabezado:', error));
+
   document.getElementById("submitButton").addEventListener("click", async function (event) {
     event.preventDefault();
 

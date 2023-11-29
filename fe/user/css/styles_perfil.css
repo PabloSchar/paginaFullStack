@@ -61,3 +61,7 @@ body {
 #logout-btn {
     width: 100%;
 }
+
+#contenedor{
+    min-height: 78.8vh;
+}

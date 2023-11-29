@@ -44,6 +44,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                 })
                 .catch(error => console.error('Error al cargar el encabezado:', error));
 
+            const footerContainer = document.getElementById('footer-container');
+
+            fetch('/footer/html/footer.html')
+                .then(response => response.text())
+                .then(html => {
+                    footerContainer.innerHTML = html;
+                })
+                .catch(error => console.error('Error al cargar el encabezado:', error));
+
             try {
                 // Realiza una solicitud al servidor para obtener los pedidos
                 const response = await fetch('http://localhost:3000/pedidos/getall');

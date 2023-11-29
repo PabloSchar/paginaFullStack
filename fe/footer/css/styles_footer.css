@@ -1,0 +1,33 @@
+.site-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: black;
+    color: #fff;
+}
+
+.site-footer a {
+    text-decoration: none;
+    color: #fff;
+    margin-right: 15px;
+}
+
+.footer-left {
+    display: flex;
+    align-items: center;
+}
+
+.footer-left i {
+    margin-right: 10px;
+    font-size: 28px;
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+}
+
+.footer-right i {
+    font-size: 24px;
+}

@@ -16,3 +16,7 @@
 #lista-pedidos{
     padding: 30px;
 }
+
+#contenido{
+    min-height: 71.7vh;
+}

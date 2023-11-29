@@ -37,6 +37,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                     }
                 })
                 .catch(error => console.error('Error al cargar el encabezado:', error));
+
+            const footerContainer = document.getElementById('footer-container');
+
+            fetch('/footer/html/footer.html')
+                .then(response => response.text())
+                .then(html => {
+                    footerContainer.innerHTML = html;
+                })
+                .catch(error => console.error('Error al cargar el encabezado:', error));
             // Lógica para cargar la lista de productos y construir el formulario
 
             const productList = await fetchProducts();

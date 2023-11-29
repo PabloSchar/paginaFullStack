@@ -33,3 +33,7 @@ h1 {
 #productSelector {
     border: 2px solid #777;
 }
+
+#contenedor{
+    min-height: 71.7vh;
+}
