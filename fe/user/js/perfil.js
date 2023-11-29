@@ -41,11 +41,20 @@ function createAdminMenu() {
         window.location.href = "/user/allusers";
     });
 
+    const verPedidosBtn = document.createElement('button');
+    verPedidosBtn.id = 'verPedidosBtn'; // Asigna el ID
+    verPedidosBtn.classList.add('btn', 'btn-info');
+    verPedidosBtn.textContent = 'Ver Pedidos';
+    verPedidosBtn.addEventListener('click', function () {
+        window.location.href = "/admin/pedidos";
+    });
+
     adminMenuBody.appendChild(adminMenuTitle);
     adminMenuBody.appendChild(agregarProductoBtn);
     adminMenuBody.appendChild(editarProductoBtn);
     adminMenuBody.appendChild(borrarProductoBtn);
     adminMenuBody.appendChild(verUsersBtn);
+    adminMenuBody.appendChild(verPedidosBtn);
 
     adminMenuContainer.appendChild(adminMenuBody);
     return adminMenuContainer;

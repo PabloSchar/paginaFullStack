@@ -1,7 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function () {
     const carritoContainer = document.getElementById('carrito-container');
-    const totalAmountElement = document.getElementById('total-amount');
-    const checkoutBtn = document.getElementById('checkout-btn');
 
     const token = localStorage.getItem('token');
 
@@ -39,6 +37,13 @@ document.addEventListener('DOMContentLoaded', async function () {
             .catch(error => console.error('Error al cargar el encabezado:', error));
 
         const carritoData = await carritoResponse.json();
+
+        // Agregar dinámicamente el título
+        const titulo = document.createElement('h1');
+        titulo.textContent = 'Carrito de Compras';
+        titulo.style.marginTop = '20px';
+        titulo.style.textAlign = 'center';
+        document.body.insertBefore(titulo, carritoContainer);
 
         for (let i = 0; i < carritoData.productos.length; i += 4) {
             const row = document.createElement('div');
@@ -122,6 +127,42 @@ document.addEventListener('DOMContentLoaded', async function () {
             carritoContainer.appendChild(row);
         }
 
+        const totalContainer = document.createElement('div');
+        totalContainer.id = 'total-container';
+        totalContainer.style.marginTop = '20px';
+        totalContainer.style.textAlign = 'center';
+        totalContainer.classList.add('mt-3');
+
+        const totalTitulo = document.createElement('h4');
+        totalTitulo.textContent = 'Total: $';
+
+        const totalSpan = document.createElement('span');
+        totalSpan.id = 'total-amount';
+        totalSpan.textContent = carritoData.total.toFixed(2);
+
+        totalTitulo.appendChild(totalSpan);
+        totalContainer.appendChild(totalTitulo);
+        document.body.appendChild(totalContainer);
+
+        // Agregar dinámicamente el botón de realizar pedido
+        const realizarPedidoBtn = document.createElement('button');
+        realizarPedidoBtn.id = 'checkout-btn';
+        realizarPedidoBtn.classList.add('btn', 'btn-primary', 'mt-3');
+        realizarPedidoBtn.textContent = 'Realizar Pedido';
+        realizarPedidoBtn.style.marginTop = '20px';
+        realizarPedidoBtn.style.marginBottom = '20px';
+
+        const centeringContainer = document.createElement('div');
+        centeringContainer.style.display = 'flex';
+        centeringContainer.style.justifyContent = 'center';
+
+        centeringContainer.appendChild(realizarPedidoBtn);
+
+        document.body.appendChild(centeringContainer);
+
+        const checkoutBtn = document.getElementById('checkout-btn');
+        const totalAmountElement = document.getElementById('total-amount');
+
         if (carritoData.productos.length === 0) {
             // No hay productos en el carrito, deshabilita el botón de compra
             checkoutBtn.disabled = true;
@@ -130,31 +171,32 @@ document.addEventListener('DOMContentLoaded', async function () {
             totalAmountElement.textContent = carritoData.total.toFixed(2);
 
             checkoutBtn.addEventListener('click', async () => {
-                const confirmacion = confirm('¿Desea realizar el pedido?');
-
-                if (confirmacion) {
-                    realizarPedido();
-                }
+                await realizarPedido();
             });
         }
-        
 
         async function realizarPedido() {
             try {
-                const response = await fetch('http://localhost:3000/pedidos', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': token,
-                    },
-                    body: JSON.stringify({ productos: carritoData.productos, total: carritoData.total }),
-                });
-    
-                if (response.ok) {
-                    console.log('Pedido realizado con éxito');
-                    location.reload();
+                const confirmacion = confirm('¿Desea realizar el pedido?');
+
+                if (confirmacion) {
+                    const response = await fetch('http://localhost:3000/pedidos', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': token,
+                        },
+                        body: JSON.stringify({ productos: carritoData.productos, total: carritoData.total }),
+                    });
+            
+                    if (response.ok) {
+                        console.log('Pedido realizado con éxito');
+                        location.reload();
+                    } else {
+                        console.error('Error al realizar el pedido:', response.statusText);
+                    }
                 } else {
-                    console.error('Error al realizar el pedido:', response.statusText);
+                    console.log('Pedido cancelado');
                 }
             } catch (error) {
                 console.error('Error al realizar el pedido:', error);

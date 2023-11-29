@@ -2,6 +2,7 @@ const OrdenCompra = require('../models/ordenCompraModel');
 const Producto = require('../models/productsModel');
 const Carrito = require('../models/carritoModel')
 const userUtils = require('../utils/userUtils')
+const path = require('path');
 
 const realizarPedido = async (req, res) => {
     try {
@@ -64,6 +65,77 @@ const realizarPedido = async (req, res) => {
     }
 };
 
+const pedidosget = async (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/pedidos', 'pedidos.html'));
+};
+
+const pedidosgetall = async (req, res) => {
+    try {
+        const pedidos = await OrdenCompra.find();
+        res.json(pedidos);
+    } catch (error) {
+        res.status(500).json({ error: 'Error al obtener los pedidos' });
+    }
+};
+
+const pedidosentregado = async (req, res) => {
+    const pedidosIds = req.body.pedidosIds;
+
+    try {
+        // Actualiza los pedidos en la base de datos
+        await OrdenCompra.updateMany({ _id: { $in: pedidosIds } }, { $set: { estado: 'entregado' } });
+
+        res.status(200).json({ message: 'Pedidos marcados como entregados exitosamente.' });
+    } catch (error) {
+        console.error('Error al marcar como entregado los pedidos:', error);
+        res.status(500).json({ error: 'Error interno del servidor.' });
+    }
+};
+
+const abrirDetallesPedido = async (req, res) => {
+    res.sendFile(path.join(__dirname, '../views/pedidos', 'detallesPedido.html'));
+};
+
+const obtenerDetallesPedido = async (req, res) => {
+    const idPedido = req.params.idPedido;
+
+    try {
+        const detallesPedido = await OrdenCompra.findById(idPedido);
+
+        if (detallesPedido) {
+            // Mapea los detalles de los productos para incluir información adicional
+            const productosConDetalles = await Promise.all(detallesPedido.productos.map(async (producto) => {
+                // Realiza una segunda consulta para obtener detalles del producto
+                const productoDetalles = await Producto.findById(producto.productoId);
+
+                return {
+                    nombre: productoDetalles.productName,
+                    imagen: productoDetalles.productImage,
+                    cantidad: producto.cantidad,
+                };
+            }));
+
+            // Crea una copia de los detalles del pedido para no modificar el original
+            const detallesPedidoConProductos = { ...detallesPedido.toObject() };
+            
+            detallesPedidoConProductos.productos = productosConDetalles;
+
+            res.json(detallesPedidoConProductos);
+        } else {
+            res.status(404).json({ error: 'Pedido no encontrado' });
+        }
+    } catch (error) {
+        console.error('Error al manejar la solicitud:', error);
+        res.status(500).json({ error: 'Error interno del servidor' });
+    }
+};
+
+
 module.exports = {
-    realizarPedido:realizarPedido
+    realizarPedido:realizarPedido,
+    pedidosget:pedidosget,
+    pedidosgetall:pedidosgetall,
+    pedidosentregado:pedidosentregado,
+    abrirDetallesPedido:abrirDetallesPedido,
+    obtenerDetallesPedido:obtenerDetallesPedido
 }

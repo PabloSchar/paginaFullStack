@@ -22,6 +22,10 @@ const ordenCompraSchema = new mongoose.Schema({
         type: Number,
         required: true,
     },
+    estado: {
+        type: String,
+        default: 'pendiente',
+    },
     fecha: {
         type: Date,
         default: Date.now,

@@ -1,0 +1,18 @@
+#texto{
+    margin-top: 10px;
+    text-align: center;
+}
+
+.container-filtro{
+    width: 300px;
+    margin-top: 10px;
+    margin-left: 30px;
+}
+
+#filtro-estado{
+    border-color: #555555;
+}
+
+#lista-pedidos{
+    padding: 30px;
+}

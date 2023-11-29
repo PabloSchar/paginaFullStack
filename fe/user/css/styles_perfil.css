@@ -48,6 +48,11 @@ body {
     width: 100%;
 }
 
+#verPedidosBtn {
+    margin-top: 5%;
+    width: 100%;
+}
+
 #admin-menu-container{
     margin-top: 15px;
 }
