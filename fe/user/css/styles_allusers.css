@@ -29,3 +29,7 @@ body {
 #contenedor{
     min-height: 83.7vh;
 }
+
+#user-list-container{
+    padding: 20px;
+}
