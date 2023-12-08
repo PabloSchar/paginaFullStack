@@ -1,4 +1,5 @@
 const Product = require('../models/productsModel')
+const Carrito = require('../models/carritoModel')
 const path = require('path');
 
 const products = async (req, res) => {
@@ -88,18 +89,40 @@ const productsdelete = async (req, res) => {
     const productId = req.params.productId;
 
     try {
-        // Encuentra el producto por ID y lo elimina
+        // Busca el producto por ID
+        const productToDelete = await Product.findById(productId);
+
+        if (!productToDelete) {
+            return res.status(404).json({ error: 'Producto no encontrado' });
+        }
+
+        // Busca y actualiza todos los carritos que contengan el producto a eliminar
+        const updateCartResult = await Carrito.updateMany(
+            { 'productos.productoId': productToDelete._id },
+            {
+                $pull: { 'productos': { productoId: productToDelete._id } },
+                $inc: { total: -(productToDelete.productPrice * await findQuantity(productToDelete._id)) },
+            }
+        );
+
+        // Elimina el producto
         const deletedProduct = await Product.findByIdAndDelete(productId);
 
         if (deletedProduct) {
-        res.json({ message: 'Producto eliminado exitosamente' });
+            return res.json({ message: 'Producto eliminado exitosamente' });
         } else {
-        res.status(404).json({ error: 'Producto no encontrado' });
+            return res.status(500).json({ error: 'Error interno al eliminar el producto' });
         }
     } catch (error) {
         console.error('Error al eliminar el producto:', error);
-        res.status(500).json({ error: 'Error interno al eliminar el producto' });
+        return res.status(500).json({ error: 'Error interno al eliminar el producto' });
     }
+};
+
+const findQuantity = async (productId) => {
+    const carrito = await Carrito.findOne({ 'productos.productoId': productId });
+    const productoEnCarrito = carrito.productos.find(item => item.productoId.equals(productId));
+    return productoEnCarrito ? productoEnCarrito.cantidad : 0;
 };
 
 const getProductStock = async (req, res) => {

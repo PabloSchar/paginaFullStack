@@ -1,6 +1,6 @@
 function showSuccessAlert(message) {
     const successContainer = document.getElementById('success-container');
-    
+
     const alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', 'alert-success', 'mt-3', 'fade', 'show', 'small-alert');
     alertDiv.textContent = message;
@@ -8,8 +8,21 @@ function showSuccessAlert(message) {
     successContainer.innerHTML = '';
     successContainer.appendChild(alertDiv);
 
+    alertDiv.style.position = 'absolute';
+    alertDiv.style.top = `${window.scrollY + 10}px`;
+    alertDiv.style.right = '10px';
+
+    // Función para actualizar la posición basándose en el desplazamiento
+    const updatePosition = () => {
+        alertDiv.style.top = `${window.scrollY + 10}px`;
+    };
+
+    window.addEventListener('scroll', updatePosition);
+
+    // Elimina el evento después de 3 segundos (3000 milisegundos)
     setTimeout(() => {
-      alertDiv.classList.remove('show');
+        alertDiv.style.display = 'none';
+        window.removeEventListener('scroll', updatePosition);
     }, 3000);
 }
 
@@ -19,12 +32,25 @@ function showErrorAlert(message) {
     const alertDiv = document.createElement('div');
     alertDiv.classList.add('alert', 'alert-danger', 'mt-3', 'fade', 'show', 'small-alert');
     alertDiv.textContent = message;
-  
+
     errorContainer.innerHTML = '';
     errorContainer.appendChild(alertDiv);
-  
+
+    alertDiv.style.position = 'absolute';
+    alertDiv.style.top = `${window.scrollY + 10}px`;
+    alertDiv.style.right = '10px';
+
+    // Función para actualizar la posición basándose en el desplazamiento
+    const updatePosition = () => {
+        alertDiv.style.top = `${window.scrollY + 10}px`;
+    };
+
+    window.addEventListener('scroll', updatePosition);
+
+    // Elimina el evento después de 3 segundos (3000 milisegundos)
     setTimeout(() => {
-      alertDiv.classList.remove('show');
+        alertDiv.style.display = 'none';
+        window.removeEventListener('scroll', updatePosition);
     }, 3000);
 }
 
@@ -263,7 +289,7 @@ function addToCart(product) {
             return response.json();
         })
         .then(data => {
-            showSuccessAlert('Producto añadido al carrito: ' + product.productName);
+            showSuccessAlert('Producto añadido al carrito correctamente');
         })
         .catch(error => {
             showErrorAlert('Error al añadir el producto al carrito');
