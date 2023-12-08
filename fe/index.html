@@ -17,6 +17,19 @@
             <h1>Productos</h1>
         </div>
 
+        <div id="filtros">
+            <div class="form-group mt-3">
+                <label for="sort-by-select">Ordenar por:</label>
+                <select id="sort-by-select" class="form-select">
+                    <option value="vacio">Sin Filtro</option>
+                    <option value="nameAsc">Nombre (A-Z)</option>
+                    <option value="nameDesc">Nombre (Z-A)</option>
+                    <option value="priceascendente">Precio de Mayor a Menor</option>
+                    <option value="pricedescendente">Precio de Menor a Mayor</option>
+                </select>
+            </div>
+        </div>
+
         <!-- Agrega un contenedor para mostrar los productos -->
         <div id="page-content" class="page-content">
         </div>

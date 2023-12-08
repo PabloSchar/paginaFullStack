@@ -114,7 +114,7 @@ function createProductImage(src) {
     return productImage;
 }
 
-function displayPagination(totalPages, currentPage) {
+function displayPagination(totalPages, currentPage, sortBy) {
     const paginationContainer = document.getElementById('pagination-container');
     paginationContainer.innerHTML = '';
     paginationContainer.classList.add('d-flex', 'justify-content-center', 'my-3');
@@ -125,9 +125,9 @@ function displayPagination(totalPages, currentPage) {
             pageButton.textContent = pageNumber;
             pageButton.classList.add('btn', 'btn-secondary', 'mx-1');
             pageButton.addEventListener('click', async function () {
-                const productList = await fetchProducts(pageNumber);
+                const productList = await fetchProducts(pageNumber, sortBy);
                 displayProducts(productList);
-                displayPagination(totalPages, pageNumber);
+                displayPagination(totalPages, pageNumber, sortBy);
             });
 
             if (pageNumber === currentPage) {
@@ -139,26 +139,39 @@ function displayPagination(totalPages, currentPage) {
     }
 }
 
-async function fetchProducts(page) {
-    const response = await fetch(`/products?page=${page}`);
-    return response.json();
-}
-
-// Función para obtener la lista de productos
+// Función para obtener la lista cantidad de la lista de productos
 async function fetchProductsCount() {
     const response = await fetch('/products/count');
     return response.json();
 }
 
-// Cargar la primera página al cargar la ventana
+async function fetchProducts(page, sortBy) {
+    const response = await fetch(`/products?page=${page}&sortBy=${sortBy}`);
+    return response.json();
+}
+
+// almacena el filtro actual
+let currentSortBy = '';
+
 window.onload = async () => {
     const initialPage = 1;
+    const sortBySelect = document.getElementById('sort-by-select');
+    const sortBy = sortBySelect.value; // (por defecto es el primer valor que es sin filtro)
     const { count: totalProducts } = await fetchProductsCount();
     const totalPages = Math.ceil(totalProducts / 6);
 
-    const productList = await fetchProducts(initialPage);
-    displayProducts(productList);
-    displayPagination(totalPages, initialPage);
+    const fetchAndDisplayProducts = async (page, sortBy) => {
+        const productList = await fetchProducts(page, sortBy);
+        displayProducts(productList);
+        displayPagination(totalPages, page, sortBy);
+    };
+
+    await fetchAndDisplayProducts(initialPage, sortBy);
+
+    sortBySelect.addEventListener('change', async function () {
+        currentSortBy = sortBySelect.value;
+        await fetchAndDisplayProducts(1, currentSortBy);
+    });
 };
 
 

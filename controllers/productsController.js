@@ -6,7 +6,20 @@ const products = async (req, res) => {
     const perPage = 6;
 
     try {
-        const products = await Product.find({ productStock: { $gt: 0 } })
+        let query = Product.find({ productStock: { $gt: 0 } });
+
+        const sortBy = req.query.sortBy || 'nameAsc';
+        if (sortBy === 'nameAsc') {
+            query = query.sort({ productName: 1 }); // Ordenar de A-Z
+        } else if (sortBy === 'nameDesc') {
+            query = query.sort({ productName: -1 }); // Ordenar de Z-A
+        } else if (sortBy === 'priceascendente') {
+            query = query.sort({ productPrice: -1 }); // Ordenar de mayor a menor
+        } else if (sortBy === 'pricedescendente') {
+            query = query.sort({ productPrice: 1 }); // Ordenar de menor a mayor
+        }
+
+        const products = await query
             .skip((page - 1) * perPage)
             .limit(perPage);
 

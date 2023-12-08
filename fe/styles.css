@@ -23,3 +23,9 @@
 #contenedor{
     min-height: 83.8vh;
 }
+
+#filtros{
+    display: flex;
+    justify-content: start;
+    margin-left: 200px;
+}
