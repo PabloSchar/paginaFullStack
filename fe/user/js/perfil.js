@@ -104,8 +104,26 @@ document.addEventListener("DOMContentLoaded", async function () {
     })
     .then(response => response.json())
     .then(userData => {
-        const profileContainer = document.getElementById('profile-container');
-        profileContainer.innerHTML = `
+        const cardmodificar = document.getElementById('cardmodificar');
+
+        const profileTitle = document.createElement('h2');
+        profileTitle.classList.add('card-title', 'text-center', 'mb-4');
+        profileTitle.textContent = 'Perfil del Usuario';
+
+        const profileContainer = document.createElement('div');
+        profileContainer.id = 'profile-container';
+
+        const logoutButton = document.createElement('button');
+        logoutButton.id = 'logout-btn';
+        logoutButton.classList.add('btn', 'btn-danger', 'mt-3');
+        logoutButton.textContent = 'Cerrar Sesión';
+
+        cardmodificar.appendChild(profileTitle);
+        cardmodificar.appendChild(profileContainer);
+        cardmodificar.appendChild(logoutButton);
+
+        const profile = document.getElementById('profile-container');
+        profile.innerHTML = `
             <p><strong>Nombre:</strong> ${userData.nombre}</p>
             <p><strong>Apellido:</strong> ${userData.apellido}</p>
             <p><strong>Nombre de Usuario:</strong> ${userData.nombreusuario}</p>
@@ -116,18 +134,17 @@ document.addEventListener("DOMContentLoaded", async function () {
             <p><strong>Ciudad:</strong> ${userData.ciudad}</p>
             <p><strong>Dirección:</strong> ${userData.direccion}</p>
         `;
+
+        const logoutBtn = document.getElementById('logout-btn');
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('token');
+            window.location.href = '/user/login';
+        });
     })
     .catch(error => console.error('Error al obtener datos del perfil:', error));
 
-    const logoutBtn = document.getElementById('logout-btn');
-
-    logoutBtn.addEventListener('click', () => {
-        localStorage.removeItem('token');
-        window.location.href = '/user/login';
-    });
-
     const isAdminContainer = document.getElementById('admin-menu-container');
-
 
     try {
         const response = await fetch('http://localhost:3000/user/isadmin', {
