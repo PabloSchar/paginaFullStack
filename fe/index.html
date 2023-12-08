@@ -18,7 +18,7 @@
         </div>
 
         <div id="filtros">
-            <div class="form-group mt-3">
+            <div id="fil" class="form-group mt-3">
                 <label for="sort-by-select">Ordenar por:</label>
                 <select id="sort-by-select" class="form-select">
                     <option value="vacio">Sin Filtro</option>
@@ -28,8 +28,12 @@
                     <option value="pricedescendente">Precio de Menor a Mayor</option>
                 </select>
             </div>
+            <div id="search-container" class="form-group mt-3">
+                <label for="search-input">Buscar por nombre:</label>
+                <input type="text" id="search-input" class="form-control" placeholder="Nombre del producto">
+                <button id="search-button" class="btn btn-primary mt-2">Buscar</button>
+            </div>
         </div>
-
         <!-- Agrega un contenedor para mostrar los productos -->
         <div id="page-content" class="page-content">
         </div>

@@ -139,41 +139,69 @@ function displayPagination(totalPages, currentPage, sortBy) {
     }
 }
 
-// Función para obtener la lista cantidad de la lista de productos
-async function fetchProductsCount() {
-    const response = await fetch('/products/count');
+async function fetchProductsCount(searchByName) {
+    let apiUrl = '/products/count';
+
+    if (searchByName) {
+        apiUrl += `?searchByName=${encodeURIComponent(searchByName)}`;
+    }
+
+    const response = await fetch(apiUrl);
     return response.json();
 }
 
-async function fetchProducts(page, sortBy) {
-    const response = await fetch(`/products?page=${page}&sortBy=${sortBy}`);
+async function fetchProducts(page, sortBy, searchByName) {
+    let apiUrl = `/products?page=${page}&sortBy=${sortBy}`;
+
+    if (searchByName) {
+        apiUrl += `&searchByName=${encodeURIComponent(searchByName)}`;
+    }
+
+    const response = await fetch(apiUrl);
     return response.json();
 }
 
-// almacena el filtro actual
 let currentSortBy = '';
 
 window.onload = async () => {
     const initialPage = 1;
     const sortBySelect = document.getElementById('sort-by-select');
-    const sortBy = sortBySelect.value; // (por defecto es el primer valor que es sin filtro)
-    const { count: totalProducts } = await fetchProductsCount();
-    const totalPages = Math.ceil(totalProducts / 6);
+    const searchInput = document.getElementById('search-input');
+    const fetchAndDisplayProducts = async (page, sortBy, searchByName) => {
+        const productList = await fetchProducts(page, sortBy, searchByName);
 
-    const fetchAndDisplayProducts = async (page, sortBy) => {
-        const productList = await fetchProducts(page, sortBy);
+        // Ajusta la llamada a fetchProductsCount según si hay un nombre de búsqueda o no
+        const { count: totalProducts } = await fetchProductsCount(searchByName || undefined);
+
+        const totalPages = Math.ceil(totalProducts / 6);
         displayProducts(productList);
-        displayPagination(totalPages, page, sortBy);
+        displayPagination(totalPages, page, sortBy, searchByName);
     };
 
-    await fetchAndDisplayProducts(initialPage, sortBy);
+    await fetchAndDisplayProducts(initialPage, sortBySelect.value, '');
 
     sortBySelect.addEventListener('change', async function () {
+        const searchByName = searchInput.value;
         currentSortBy = sortBySelect.value;
-        await fetchAndDisplayProducts(1, currentSortBy);
+        await fetchAndDisplayProducts(1, currentSortBy, searchByName);
     });
-};
 
+    const handleSearch = async () => {
+        const searchByName = searchInput.value;
+        await fetchAndDisplayProducts(1, currentSortBy, searchByName);
+    };
+
+    searchInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+            handleSearch();
+        }
+    });
+
+    const searchButton = document.getElementById('search-button');
+    if (searchButton) {
+        searchButton.addEventListener('click', handleSearch);
+    }
+};
 
 document.addEventListener("DOMContentLoaded", function () {
     const headerContainer = document.getElementById('header-container');

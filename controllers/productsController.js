@@ -19,6 +19,12 @@ const products = async (req, res) => {
             query = query.sort({ productPrice: 1 }); // Ordenar de menor a mayor
         }
 
+        //busqueda por nombre
+        const searchByName = req.query.searchByName;
+        if (searchByName) {
+            query = query.find({ productName: { $regex: new RegExp(`^${searchByName}`, 'i') } });
+        }
+
         const products = await query
             .skip((page - 1) * perPage)
             .limit(perPage);
@@ -56,7 +62,14 @@ const productsaddnewpost = async (req,res)=>{
 
 const productsCount = async (req, res) => {
     try {
-        const count = await Product.countDocuments();
+        let query = { productStock: { $gt: 0 } };
+
+        // en caso de que se busque un producto por nombre
+        if (req.query.searchByName) {
+            query = { ...query, productName: { $regex: new RegExp(`^${req.query.searchByName}`, 'i') } };
+        }
+
+        const count = await Product.countDocuments(query);
         res.send({ count });
     } catch (error) {
         res.status(500).json({ error: 'Error al contar los productos' });
