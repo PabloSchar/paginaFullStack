@@ -139,7 +139,7 @@ const alluserssend = async (req,res)=>{
     }
 }
 
-const allusersdelete = async (req,res)=>{
+const allusersdelete = async (req, res) => {
     const userId = req.params.id;
 
     try {
@@ -150,13 +150,13 @@ const allusersdelete = async (req,res)=>{
             return res.status(404).json({ error: 'Usuario no encontrado' });
         }
 
-        // Responde con el usuario eliminado o un mensaje de éxito
-        res.json(deletedUser);
+        // Responde con el email del usuario eliminado
+        res.json({ email: deletedUser.correo });
     } catch (error) {
         console.error('Error al eliminar el usuario:', error);
         res.status(500).json({ error: 'Error interno del servidor' });
     }
-}
+};
 
 const allusersrole = async (req,res)=>{
     const userId = req.params.id;

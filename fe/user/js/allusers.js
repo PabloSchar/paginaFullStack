@@ -115,11 +115,30 @@ document.addEventListener('DOMContentLoaded', async function () {
             // Función para eliminar un usuario
             async function deleteUser(userId) {
                 try {
+                    const token = localStorage.getItem('token');
+            
+                    // Decodificar el token
+                    const tokenData = atob(token.split('.')[1]);
+                    const decodedToken = JSON.parse(tokenData);
+            
+                    // Obtener el correo
+                    const userMailFromToken = decodedToken.correo;
+            
                     const response = await fetch(`/user/api/users/${userId}`, {
                         method: 'DELETE',
                     });
-
+            
                     if (response.ok) {
+                        const responseBody = await response.json();
+            
+                        // Comparar el correo obtenido del token con el correo de la respuesta(cierra la sesion si es el mismo usuario)
+                        if (userMailFromToken === responseBody.email) {
+                            localStorage.removeItem('token');
+                            console.log('Token eliminado correctamente.');
+                        } else {
+                            console.error('Los correos electrónicos no coinciden. No se puede eliminar el token.');
+                        }
+            
                         console.log(`Usuario con ID ${userId} eliminado.`);
                         window.location.reload();
                     } else {
