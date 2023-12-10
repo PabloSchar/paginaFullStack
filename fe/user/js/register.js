@@ -9,12 +9,12 @@ function showErrorAlert(message) {
   errorContainer.appendChild(alertDiv);
 
   alertDiv.style.position = 'absolute';
-  alertDiv.style.top = `${window.scrollY + 10}px`;
+  alertDiv.style.top = `${window.scrollY + 70}px`;
   alertDiv.style.right = '10px';
 
   // Función para actualizar la posición basándose en el desplazamiento
   const updatePosition = () => {
-      alertDiv.style.top = `${window.scrollY + 10}px`;
+      alertDiv.style.top = `${window.scrollY + 70}px`;
   };
 
   window.addEventListener('scroll', updatePosition);
