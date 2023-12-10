@@ -5,3 +5,9 @@
 #contenedor{
     min-height: 83.8vh;
 }
+
+.small-alert {
+    max-width: 320px;
+    margin-left: auto;
+    transition: opacity 0.5s ease-in-out;
+}

@@ -152,26 +152,46 @@ const productseditput = async (req, res) => {
     const productId = req.params.id;
 
     try {
-        // Encuentra el producto por su ID
-        const producto = await Product.findById(productId);
+        // Encuentra el producto por su ID antes de la actualización
+        const productoAntes = await Product.findById(productId);
 
-        if (!producto) {
+        if (!productoAntes) {
             return res.status(404).json({ message: 'Producto no encontrado' });
         }
 
-        // Validar que el stock y el precio no sean menores a 0
+        // Almacena el precio anterior antes de la actualización
+        const precioAnterior = productoAntes.productPrice;
+
+        // Valida que el stock y el precio no sean menores a 0
         if (req.body.productStock < 0 || req.body.productPrice < 0) {
             return res.status(400).json({ message: 'El stock y el precio deben ser mayores o iguales a 0' });
         }
 
-        // Actualiza los campos con los nuevos valores
-        producto.productName = req.body.productName || producto.productName;
-        producto.productStock = req.body.productStock || producto.productStock;
-        producto.productPrice = req.body.productPrice || producto.productPrice;
-        producto.productImage = req.body.productImage || producto.productImage;
-        producto.productDescription = req.body.productDescription || producto.productDescription;
+        // Encuentra todos los carritos que contienen el producto
+        const carritos = await Carrito.find({ 'productos.productoId': productoAntes._id });
 
-        const productoActualizado = await producto.save();
+        // Actualiza el producto con los nuevos valores
+        productoAntes.productName = req.body.productName || productoAntes.productName;
+        productoAntes.productStock = req.body.productStock || productoAntes.productStock;
+        productoAntes.productPrice = req.body.productPrice || productoAntes.productPrice;
+        productoAntes.productImage = req.body.productImage || productoAntes.productImage;
+        productoAntes.productDescription = req.body.productDescription || productoAntes.productDescription;
+
+        const productoActualizado = await productoAntes.save();
+
+        // Actualiza el total de cada carrito afectado
+        await Promise.all(carritos.map(async (carrito) => {
+            const productoEnCarrito = carrito.productos.find(p => p.productoId.equals(productoAntes._id));
+            if (productoEnCarrito) {
+                // Resta el costo del producto antes de la actualización
+                const costoAntes = precioAnterior * productoEnCarrito.cantidad;
+                // Suma el costo del producto después de la actualización
+                const costoDespues = productoActualizado.productPrice * productoEnCarrito.cantidad;
+                // Actualiza el total del carrito
+                carrito.total += costoDespues - costoAntes;
+                await carrito.save();
+            }
+        }));
 
         res.json({ message: 'Producto actualizado con éxito', producto: productoActualizado });
     } catch (error) {

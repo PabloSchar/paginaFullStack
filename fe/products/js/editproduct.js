@@ -1,3 +1,59 @@
+function showSuccessAlert(message) {
+    const successContainer = document.getElementById('success-container');
+
+    const alertDiv = document.createElement('div');
+    alertDiv.classList.add('alert', 'alert-success', 'mt-3', 'fade', 'show', 'small-alert');
+    alertDiv.textContent = message;
+
+    successContainer.innerHTML = '';
+    successContainer.appendChild(alertDiv);
+
+    alertDiv.style.position = 'absolute';
+    alertDiv.style.top = `${window.scrollY + 10}px`;
+    alertDiv.style.right = '10px';
+
+    // Función para actualizar la posición basándose en el desplazamiento
+    const updatePosition = () => {
+        alertDiv.style.top = `${window.scrollY + 10}px`;
+    };
+
+    window.addEventListener('scroll', updatePosition);
+
+    // Elimina el evento después de 3 segundos (3000 milisegundos)
+    setTimeout(() => {
+        alertDiv.style.display = 'none';
+        window.removeEventListener('scroll', updatePosition);
+    }, 3000);
+}
+
+function showErrorAlert(message) {
+    const errorContainer = document.getElementById('error-container');
+
+    const alertDiv = document.createElement('div');
+    alertDiv.classList.add('alert', 'alert-danger', 'mt-3', 'fade', 'show', 'small-alert');
+    alertDiv.textContent = message;
+
+    errorContainer.innerHTML = '';
+    errorContainer.appendChild(alertDiv);
+
+    alertDiv.style.position = 'absolute';
+    alertDiv.style.top = `${window.scrollY + 10}px`;
+    alertDiv.style.right = '10px';
+
+    // Función para actualizar la posición basándose en el desplazamiento
+    const updatePosition = () => {
+        alertDiv.style.top = `${window.scrollY + 10}px`;
+    };
+
+    window.addEventListener('scroll', updatePosition);
+
+    // Elimina el evento después de 3 segundos (3000 milisegundos)
+    setTimeout(() => {
+        alertDiv.style.display = 'none';
+        window.removeEventListener('scroll', updatePosition);
+    }, 3000);
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
     const token = localStorage.getItem('token');
 
@@ -107,6 +163,7 @@ async function cargarFormularioEdicionProductos() {
             guardarCambiosBtn.textContent = 'Guardar cambios';
             guardarCambiosBtn.style.width = '300px';
             guardarCambiosBtn.style.height = '43px';
+            guardarCambiosBtn.type = 'button';
             guardarCambiosBtn.classList.add('btn', 'btn-primary');
             guardarCambiosBtn.addEventListener('click', () => guardarCambios(producto._id));
 
@@ -208,10 +265,10 @@ async function guardarCambios(idProducto) {
         });
 
         if (response.ok) {
-            const data = await response.json();
-            console.log('Producto actualizado con éxito:', data);
+            showSuccessAlert('Producto actualizado con éxito');
         } else {
             console.error('Error al actualizar el producto:', response.statusText);
+            showErrorAlert('Error al actualizar el producto' + response.statusText);
         }
     } catch (error) {
         console.error('Error al realizar la solicitud de actualización:', error);
