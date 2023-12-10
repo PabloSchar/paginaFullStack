@@ -7,9 +7,16 @@ const ordenCompraSchema = new mongoose.Schema({
     },
     productos: [
         {
-            productoId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Producto', // Referencia al modelo de productos
+            nombre: {
+                type: String,
+                required: true,
+            },
+            imagen: {
+                type: String,
+                required: true,
+            },
+            precio: {
+                type: Number,
                 required: true,
             },
             cantidad: {

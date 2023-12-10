@@ -16,7 +16,13 @@ const realizarPedido = async (req, res) => {
         const { productos, total } = req.body;
 
         // Guarda el pedido en la base de datos
-        const nuevoPedido = new OrdenCompra({ usuarioEmail: correo, productos, total });
+        const detallesProductos = productos.map(producto => ({
+            nombre: producto.productoId.productName,
+            imagen: producto.productoId.productImage,
+            precio: producto.productoId.productPrice,
+            cantidad: producto.cantidad,
+        }));
+        const nuevoPedido = new OrdenCompra({ usuarioEmail: correo, productos: detallesProductos, total });
         await nuevoPedido.save();
 
         for (const productoPedido of productos) {
@@ -27,22 +33,21 @@ const realizarPedido = async (req, res) => {
                 continue;
             }
 
-            // Actualizar el stock del producto restando la cantidad del pedido
+            // Actualiza el stock del producto restando la cantidad del pedido
             productoBD.productStock -= productoPedido.cantidad;
 
             await productoBD.save();
 
             const carritosConProducto = await Carrito.find({ 'productos.productoId': productoPedido.productoId });
 
-            // Actualizar la cantidad del producto en cada carrito
+            // Actualiza la cantidad del producto en cada carrito
             for (const carrito of carritosConProducto) {
                 const productoEnCarrito = carrito.productos.find(item => item.productoId.equals(productoPedido.productoId));
 
                 if (productoEnCarrito) {
-                    // Actualizar la cantidad del producto en el carrito según el nuevo stock disponible
+                    // Actualiza la cantidad del producto en el carrito según el nuevo stock disponible
                     productoEnCarrito.cantidad = Math.min(productoEnCarrito.cantidad, productoBD.productStock);
 
-                    // Guardar los cambios en el carrito
                     await carrito.save();
                 }
             }
@@ -103,16 +108,10 @@ const obtenerDetallesPedido = async (req, res) => {
         const detallesPedido = await OrdenCompra.findById(idPedido);
 
         if (detallesPedido) {
-            // Mapea los detalles de los productos para incluir información adicional
-            const productosConDetalles = await Promise.all(detallesPedido.productos.map(async (producto) => {
-                // Realiza una segunda consulta para obtener detalles del producto
-                const productoDetalles = await Producto.findById(producto.productoId);
-
-                return {
-                    nombre: productoDetalles.productName,
-                    imagen: productoDetalles.productImage,
-                    cantidad: producto.cantidad,
-                };
+            const productosConDetalles = detallesPedido.productos.map((producto) => ({
+                nombre: producto.nombre,
+                imagen: producto.imagen,
+                cantidad: producto.cantidad,
             }));
 
             // Crea una copia de los detalles del pedido para no modificar el original

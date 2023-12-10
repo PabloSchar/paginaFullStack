@@ -121,7 +121,15 @@ const productsdelete = async (req, res) => {
 
 const findQuantity = async (productId) => {
     const carrito = await Carrito.findOne({ 'productos.productoId': productId });
+
+    if (!carrito) {
+        // Si no se encuentra el producto en ningún carrito, retorna cero
+        return 0;
+    }
+
     const productoEnCarrito = carrito.productos.find(item => item.productoId.equals(productId));
+
+    // Si no hay una cantidad definida, retorna cero
     return productoEnCarrito ? productoEnCarrito.cantidad : 0;
 };
 
